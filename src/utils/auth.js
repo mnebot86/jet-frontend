@@ -1,0 +1,6 @@
+export const ROLE = {
+	COACH: 'COACH',
+	PLAYER: 'PLAYER',
+	GUARDIAN: 'GUARDIAN',
+	TEAM_MOM: 'TEAM_MOM',
+};

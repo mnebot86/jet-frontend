@@ -9,7 +9,7 @@ import store from 'store';
 export default App = () => {
 	const colorScheme = Appearance.getColorScheme();
 
-	const theme = colorScheme === 'dark' ? DARK_THEME : LIGHT_THEME;
+	const theme = colorScheme !== 'dark' ? DARK_THEME : LIGHT_THEME;
 
 	return (
 		<Provider store={store}>
