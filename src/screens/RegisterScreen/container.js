@@ -29,7 +29,9 @@ const Register = () => {
 
 		await register(data)
 			.then((data) => setAuthToken(data.token))
-			.catch((error) => console.log('ERROR', error.toJSON()));
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 
 	return (
