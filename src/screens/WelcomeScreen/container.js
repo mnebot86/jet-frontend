@@ -4,7 +4,7 @@ import { Text, View, Image } from 'react-native';
 import { SafeArea, Button } from 'components';
 import { WelcomeScreenStyles } from 'styles/WelcomeScreen/styles';
 
-const WelcomeScreen = () => {
+const WelcomeScreen = ({ navigation }) => {
 	const theme = useTheme();
 	const styles = WelcomeScreenStyles(theme);
 
@@ -21,7 +21,10 @@ const WelcomeScreen = () => {
 				<View style={styles.btnContainer}>
 					<Button title="Login" />
 
-					<Button title="Register" />
+					<Button
+						title="Register"
+						onPress={() => navigation.navigate('Register')}
+					/>
 				</View>
 			</View>
 		</SafeArea>
