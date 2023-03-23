@@ -1,2 +1,2 @@
-# jet-backend
-Backend for North Providence Jets app
+# jet-frontend
+Fontend for North Providence Jets app
