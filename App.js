@@ -6,7 +6,7 @@ import Main from 'src/Main';
 import { LIGHT_THEME, DARK_THEME } from 'styles/themes';
 import store from 'store';
 
-export default App = () => {
+const App = () => {
 	const colorScheme = Appearance.getColorScheme();
 
 	const theme = colorScheme !== 'dark' ? DARK_THEME : LIGHT_THEME;
@@ -19,3 +19,5 @@ export default App = () => {
 		</Provider>
 	);
 };
+
+export default App;

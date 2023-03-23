@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import { Button, CheckBox, Input } from 'components';
 import { RegisterScreenStyles } from '../../styles/Register/style';
 import { ROLE } from 'utils/auth';
+import { register, setAuthToken } from 'services/auth';
 
 const Register = () => {
 	const theme = useTheme();
@@ -26,7 +27,9 @@ const Register = () => {
 			confirmPassword,
 		};
 
-		console.log(data);
+		await register(data)
+			.then((data) => setAuthToken(data.token))
+			.catch((error) => console.log('ERROR', error.toJSON()));
 	};
 
 	return (
