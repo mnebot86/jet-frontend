@@ -19,11 +19,14 @@ const WelcomeScreen = ({ navigation }) => {
 				</Text>
 
 				<View style={styles.btnContainer}>
-					<Button title="Login" />
+					<Button
+						title="Login"
+						onPress={() => navigation.navigate('LoginScreen')}
+					/>
 
 					<Button
 						title="Register"
-						onPress={() => navigation.navigate('Register')}
+						onPress={() => navigation.navigate('RegisterScreen')}
 					/>
 				</View>
 			</View>

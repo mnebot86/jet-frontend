@@ -15,12 +15,14 @@ export const LIGHT_THEME = {
 	primaryText: black,
 	primaryButtonColor: navyBlue,
 	primaryButtonText: gold,
-	primaryLogo: require('images/logos/jetsLogo.png'),
+	primaryLogo: require('logos/jetsLogo.png'),
 	primaryNavigationTintColor: navyBlue,
 	primaryCheckMarkColor: navyBlue,
 	primaryInputBackgroundColor: lightGray,
 	primaryInputBorderColor: darkGray,
 	primaryInputTextColor: coal,
+	primaryActiveIconColor: gold,
+	primaryInactiveIconColor: navyBlue,
 };
 
 export const DARK_THEME = {
@@ -28,10 +30,12 @@ export const DARK_THEME = {
 	primaryText: white,
 	primaryButtonColor: gold,
 	primaryButtonText: navyBlue,
-	primaryLogo: require('images/logos/jetsLogo-dark.png'),
+	primaryLogo: require('logos/jetsLogo-dark.png'),
 	primaryNavigationTintColor: gold,
 	primaryCheckMarkColor: gold,
 	primaryInputBackgroundColor: coal,
 	primaryInputBorderColor: coal,
 	primaryInputTextColor: light,
+	primaryActiveIconColor: gold,
+	primaryInactiveIconColor: navyBlue,
 };

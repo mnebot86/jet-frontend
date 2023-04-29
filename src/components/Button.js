@@ -15,7 +15,7 @@ const Button = ({ title, onPress }) => {
 		},
 		btnText: {
 			color: theme.primaryButtonText,
-			fontWeight: 700,
+			fontWeight: '700',
 			textAlign: 'center',
 		},
 	});

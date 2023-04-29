@@ -7,7 +7,9 @@ module.exports = function (api) {
 				'module-resolver',
 				{
 					alias: {
-						images: './assets/images',
+						icons: './src/images/icons',
+						logos: './src/images/logos',
+						placeholders: './src/images/placeholders',
 						src: './src',
 						components: './src/components',
 						navigation: './src/navigation',

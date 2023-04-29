@@ -27,5 +27,37 @@ export const deleteAuthToken = async () => {
 };
 
 export const register = async (data) => {
-	return await server.post('/auth/register', data).then((res) => res.data);
+	try {
+		const res = await server.post('/auth/register', data);
+
+		return res.data;
+	} catch (error) {
+		const { response } = error;
+		if (response && response.data && response.data.error) {
+			return response.data;
+		} else {
+			return error.message;
+		}
+	}
+};
+
+export const login = async (data) => {
+	try {
+		const res = await server.post('/auth/login', data);
+
+		return res.data;
+	} catch (error) {
+		const { response } = error;
+		if (response && response.data && response.data.error) {
+			return response.data;
+		} else {
+			return error.message;
+		}
+	}
+};
+
+export const verifyUser = async (token) => {
+	return await server
+		.post('/auth/verifyUser', { token })
+		.then((res) => res.data);
 };

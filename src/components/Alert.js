@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, Text, TouchableOpacity, Modal } from 'react-native';
 import { getHasError } from 'store/selectors/alert';
-import { setAlert, clearAlert } from 'store/slices/alert';
+import { clearAlert } from 'store/slices/alert';
 
 const Alert = () => {
 	const hasError = useSelector(getHasError);
@@ -34,6 +34,6 @@ const styles = StyleSheet.create({
 	text: {
 		color: 'white',
 		fontSize: 24,
-		fontWeight: 600,
+		fontWeight: '600',
 	},
 });

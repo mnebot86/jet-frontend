@@ -5,10 +5,10 @@ export const RegisterScreenStyles = (theme) =>
 	StyleSheet.create({
 		container: {
 			...global.container,
-			justifyContent: 'space-around',
-			alignItems: 'center',
 			paddingTop: 16,
 			backgroundColor: theme.primaryBackground,
+			justifyContent: 'space-around',
+			alignItems: 'center',
 		},
 		header: {
 			...global.header,
