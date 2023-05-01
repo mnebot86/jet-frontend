@@ -2,8 +2,6 @@ import React from 'react';
 import { useTheme } from 'styled-components';
 import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from 'screens/WelcomeScreen/container';
-import RegisterScreen from 'screens/RegisterScreen/container';
-import LoginScreen from 'screens/LoginScreen/container';
 import { navigationStyles } from 'styles/navigation/style';
 
 const Stack = createStackNavigator();
@@ -24,10 +22,6 @@ const AuthStack = () => {
 				component={WelcomeScreen}
 				options={{ headerShown: false }}
 			/>
-
-			<Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-
-			<Stack.Screen name="LoginScreen" component={LoginScreen} />
 		</Stack.Navigator>
 	);
 };
