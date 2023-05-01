@@ -7,7 +7,6 @@ export const WelcomeScreenStyles = (theme) =>
 		container: {
 			...global.container,
 			alignItems: 'center',
-			justifyContent: 'space-evenly',
 			backgroundColor: theme.primaryBackground,
 		},
 		image: {
@@ -22,10 +21,16 @@ export const WelcomeScreenStyles = (theme) =>
 			textTransform: 'capitalize',
 		},
 		btnContainer: {
-			width: '100%',
+			width: '50%',
 			flexDirection: 'row',
 			marginTop: 50,
-			justifyContent: 'space-around',
-			gap: 5,
+			justifyContent: 'center',
+		},
+		btn: {
+			paddingVertical: 10,
+			paddingHorizontal: 20,
+		},
+		btnActive: {
+			backgroundColor: 'yellow',
 		},
 	});
