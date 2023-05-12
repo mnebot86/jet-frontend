@@ -1,19 +1,14 @@
 import { server } from './apiConfig';
 import { getAuthToken } from 'services/auth';
 
-export const uploadAvatar = async (formData, onUploadProgress) => {
+export const addPlayer = async (data) => {
 	try {
 		const token = await getAuthToken();
 		const headers = {
-			Accept: 'application/json',
-			'Content-Type': 'multipart/form-data',
 			Authorization: `Bearer ${token}`,
 		};
 
-		const res = await server.post(`/avatar`, formData, {
-			headers,
-			onUploadProgress,
-		});
+		const res = await server.post('/players', data, { headers });
 
 		return res.data;
 	} catch (error) {

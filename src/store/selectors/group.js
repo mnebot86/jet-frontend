@@ -10,5 +10,7 @@ export const getGroupNamesAndIds = createSelector(groupSlice, (state) => {
 	return Object.keys(state.groups).map((groupId) => ({
 		id: state.groups[groupId]._id,
 		name: state.groups[groupId].name,
+		min: state.groups[groupId].ages.min,
+		max: state.groups[groupId].ages.max,
 	}));
 });

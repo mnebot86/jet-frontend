@@ -26,7 +26,7 @@ const Main = () => {
 
 			if (!!token) {
 				await verifyUser(token).then((res) => {
-					dispatch(setUser(res));
+					dispatch(setUser(res.data));
 				});
 			} else {
 				dispatch(clearUser());

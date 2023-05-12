@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from 'styled-components';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import AvatarUpload from './AvatarUpload';
 import Logout from './Logout';
 import { global } from 'styles/globalStyles';

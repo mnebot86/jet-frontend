@@ -1,15 +1,47 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
-import Placeholder from 'placeholders/avatar-placeholder.png';
 import { useSelector } from 'react-redux';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { upLoadAvatar } from '../../services/avatar';
+import Placeholder from 'placeholders/avatar-placeholder.png';
 import { getUserId } from 'store/selectors/user';
+import { uploadAvatar } from 'services/avatar';
 
-const AvatarUpload = () => {
+const AvatarUpload = ({ playerId }) => {
 	const userId = useSelector(getUserId);
 	const [image, setImage] = useState(null);
 	const [percentage, setPercentage] = useState(0);
+
+	const sendImage = async () => {
+		if (!image) {
+			return;
+		}
+
+		const formData = new FormData();
+		const type = image.split('.')[1];
+
+		formData.append('avatar', {
+			uri: image,
+			name: `${playerId || userId}_avatar`,
+			type: `image/${type}`,
+		});
+
+		if (!!playerId) {
+			formData.append('playerId', playerId);
+		}
+
+		try {
+			await uploadAvatar(formData, (event) => {
+				const progress = Math.round((event.loaded / event.total) * 100);
+				setPercentage(progress);
+
+				console.log(
+					`Upload progress: ${progress}%, loaded: ${event.loaded}, total: ${event.total}`
+				);
+			});
+		} catch (error) {
+			console.log('Error uploading avatar', error);
+		}
+	};
 
 	const pickImage = async () => {
 		const { status } =
@@ -24,64 +56,35 @@ const AvatarUpload = () => {
 			allowsEditing: true,
 		});
 
-		if (!result.canceled) {
-			setImage(result.uri);
+		if (!result.canceled && result.assets.length > 0) {
+			const { uri } = result.assets[0];
+
+			setImage(uri);
+			sendImage();
 		}
-	};
-
-	const sendImage = async () => {
-		if (!image) {
-			return;
-		}
-
-		const formData = new FormData();
-		const type = image.split('.')[1];
-
-		formData.append('avatar', {
-			uri: image,
-			name: `${userId}_avatar`,
-			type: `image/${type}`,
-		});
-
-		upLoadAvatar(formData, (event) => {
-			const progress = Math.round((event.loaded / event.total) * 100);
-			setPercentage(progress);
-
-			console.log(
-				`Upload progress: ${progress}%, loaded: ${event.loaded}, total: ${event.total}`
-			);
-		}).then((data) => {
-			console.log('Upload complete:', data);
-		});
 	};
 
 	return (
 		<View>
 			<Text style={styles.title}>Profile Image</Text>
 
-			<View style={styles.imgWrapper}>
-				{!image ? (
-					<Image
-						source={Placeholder}
-						style={styles.image}
-						resizeMode="cover"
-					/>
-				) : (
-					<Image
-						source={{ uri: image }}
-						style={styles.image}
-						resizeMode="cover"
-					/>
-				)}
-			</View>
-
-			<View style={styles.btnWrapper}>
-				<Button title="Album" onPress={pickImage} />
-
-				<Button title="Upload" onPress={sendImage} disabled={!image} />
-			</View>
-
-			{/* <Text>{percentage}%</Text> */}
+			<TouchableOpacity onPress={pickImage}>
+				<View style={styles.imgWrapper}>
+					{!image ? (
+						<Image
+							source={Placeholder}
+							style={styles.image}
+							resizeMode="cover"
+						/>
+					) : (
+						<Image
+							source={{ uri: image }}
+							style={styles.image}
+							resizeMode="cover"
+						/>
+					)}
+				</View>
+			</TouchableOpacity>
 		</View>
 	);
 };
@@ -103,7 +106,7 @@ const styles = StyleSheet.create({
 		borderColor: 'black',
 		borderWidth: 2,
 		overflow: 'hidden',
-		width: 100,
+		width: 200,
 		alignSelf: 'center',
 	},
 	image: {

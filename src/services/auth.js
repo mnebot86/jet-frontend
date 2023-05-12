@@ -57,7 +57,7 @@ export const login = async (data) => {
 };
 
 export const verifyUser = async (token) => {
-	return await server
-		.post('/auth/verifyUser', { token })
-		.then((res) => res.data);
+	const headers = !!token ? { Authorization: `Bearer ${token}` } : {};
+	const config = { headers };
+	return await server.get('/auth/verifyUser', config).then((res) => res.data);
 };
