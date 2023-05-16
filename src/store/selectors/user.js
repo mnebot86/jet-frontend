@@ -1,29 +1,27 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { get } from 'lodash';
 
-export const userSlice = (state) => state.user;
+export const currentUser = (state) => state.user;
 
 export const getSignedIn = createSelector(
-	userSlice,
+	currentUser,
 	(state) => state.isSignedIn
 );
 
-export const getUserId = createSelector(userSlice, (state) => {
-	state?.user?._id;
+export const getUserId = createSelector(currentUser, (state) => {
+	get(state, 'user._id');
 });
 
-export const getUserRole = createSelector(
-	userSlice,
-	(state) => state?.user?.role
+export const getUserRole = createSelector(currentUser, (state) =>
+	get(state, 'user.role')
 );
 
-export const getRoster = createSelector(
-	userSlice,
-	(state) => state.user?.groups[0]?.roster
+export const getPlayers = createSelector(currentUser, (state) =>
+	get(state, 'user.players', [])
 );
 
-export const getGames = createSelector(
-	userSlice,
-	(state) => state.user?.groups[0]?.games
+export const getGames = createSelector(currentUser, (state) =>
+	get(state, 'user.groups[0].games')
 );
 
 export const getNextGame = createSelector(getGames, (games) => {
