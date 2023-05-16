@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTheme } from 'styled-components';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { get } from 'lodash';
 import { SafeArea, Input, DateTimeInput, CheckBox } from 'components';
 import AvatarUpload from '../SettingsScreen/AvatarUpload';
+import { setUserPlayer } from 'store/slices/user';
 import { getGroupNamesAndIds } from 'store/selectors/group';
 import { addPlayer } from 'services/player';
 import { calculateAge } from 'utils/helper';
 
 const RegistrationScreen = () => {
+	const dispatch = useDispatch();
 	const groups = useSelector(getGroupNamesAndIds);
 	const theme = useTheme();
 
@@ -30,11 +31,12 @@ const RegistrationScreen = () => {
 	const [doctorName, setDoctorName] = useState('');
 	const [doctorPhone, setDoctorPhone] = useState('');
 	const [playerType, setPlayerType] = useState('FOOTBALL_PLAYER');
-	const [group, setGroup] = useState(groups[0].id);
+	const [group, setGroup] = useState();
 	const [playerId, setPlayerId] = useState(null);
 	const [step, setStep] = useState(1);
+	const [disable, setDisable] = useState(true);
 
-	const filteredGroups = useMemo(() => {
+	const filterGroups = (groups, playerType, age) => {
 		return groups.filter((group) => {
 			const isInAgeRange = group.min <= age && group.max >= age;
 
@@ -44,6 +46,10 @@ const RegistrationScreen = () => {
 				return !group.name.includes('Cheer') && isInAgeRange;
 			}
 		});
+	};
+
+	const filteredGroups = useMemo(() => {
+		return filterGroups(groups, playerType, age);
 	}, [groups, playerType, age]);
 
 	const handleCheckboxChange = useCallback((option) => {
@@ -72,8 +78,8 @@ const RegistrationScreen = () => {
 			state,
 			zip,
 			phoneNumber,
-			allergies: allergies.split(', '),
-			medicalConditions: medical.split(', '),
+			allergies: !!allergies ? allergies.split(', ') : [],
+			medicalConditions: !!medical ? medical.split(', ') : [],
 			role: playerType,
 			group,
 			doctor: doctorName,
@@ -82,10 +88,36 @@ const RegistrationScreen = () => {
 
 		addPlayer(player).then((res) => {
 			const playerId = get(res, 'data.player._id');
+
+			dispatch(setUserPlayer(get(res, 'data.player')));
+
 			setPlayerId(playerId);
 		});
 
 		setStep((prev) => prev + 1);
+	};
+
+	const disableBtn = () => {
+		if (
+			!firstName ||
+			!lastName ||
+			!school ||
+			!grade ||
+			!street ||
+			!city ||
+			!state ||
+			!city ||
+			!state ||
+			!zip ||
+			!phoneNumber ||
+			!playerType ||
+			!doctorName ||
+			!doctorPhone
+		) {
+			setDisable(true);
+		} else {
+			setDisable(false);
+		}
 	};
 
 	const handleComplete = () => {
@@ -103,7 +135,7 @@ const RegistrationScreen = () => {
 		setAllergies('');
 		setMedical('');
 		setPlayerType('');
-		setGroup(groups[2]);
+		setGroup('');
 		setDoctorName('');
 		setDoctorPhone('');
 
@@ -123,19 +155,17 @@ const RegistrationScreen = () => {
 		},
 		label: {
 			color: theme.primaryText,
+			marginBottom: 6,
 		},
 		selectContainer: {
+			width: 300,
 			padding: 16,
-			width: '100%',
-		},
-		select: {
-			borderWidth: 1,
-			borderColor: '#ccc',
-			borderRadius: 4,
-			marginTop: 5,
 		},
 		selectItem: {
 			fontSize: 16,
+			fontWeight: '600',
+			marginTop: 8,
+			textAlign: 'center',
 		},
 		inputContainer: {
 			marginBottom: 20,
@@ -176,7 +206,32 @@ const RegistrationScreen = () => {
 
 	useEffect(() => {
 		handleAge();
-	}, [birthday]);
+
+		setGroup(filteredGroups[0]?.id);
+	}, [birthday, filteredGroups]);
+
+	useEffect(() => {
+		disableBtn();
+	}, [
+		firstName,
+		lastName,
+		school,
+		grade,
+		street,
+		city,
+		state,
+		city,
+		state,
+		zip,
+		phoneNumber,
+		playerType,
+		doctorName,
+		doctorPhone,
+	]);
+
+	const handleBackButton = useCallback(() => {
+		setStep((prev) => prev - 1);
+	}, []);
 
 	return (
 		<SafeArea style={styles.container}>
@@ -350,25 +405,16 @@ const RegistrationScreen = () => {
 									Qualified Group:
 								</Text>
 
-								<Picker
-									mode="dialog"
-									style={styles.select}
-									itemStyle={styles.selectItem}
-									selectedValue={group}
-									selectionColor="red"
-									numberOfLines="1"
-									onValueChange={(itemValue, itemIndex) =>
-										setGroup(itemValue)
-									}>
-									{filteredGroups.map((group, idx) => (
-										<Picker.Item
+								{filteredGroups.map((group, idx) => {
+									return (
+										<Text
 											key={`group-${idx}`}
-											label={`${group.name} ${group.min}-${group.max}`}
-											value={group.id}
-											color={theme.primaryText}
-										/>
-									))}
-								</Picker>
+											style={styles.selectItem}>
+											{group.name} {group.min} -{' '}
+											{group.max}
+										</Text>
+									);
+								})}
 							</View>
 						) : (
 							<Text style={styles.birthdayMessage}>
@@ -380,6 +426,7 @@ const RegistrationScreen = () => {
 							<Button
 								title="Submit"
 								onPress={handleSubmitPlayer}
+								disabled={disable}
 							/>
 						</View>
 					</>
@@ -388,6 +435,7 @@ const RegistrationScreen = () => {
 				{step === 2 && (
 					<View style={styles.avatarWrapper}>
 						<AvatarUpload playerId={playerId} />
+						<Button title="Back" onPress={handleBackButton} />
 						<Button title="Done" onPress={handleComplete} />
 					</View>
 				)}

@@ -20,9 +20,27 @@ const userSlice = createSlice({
 			state.user = null;
 			state.isSignedIn = false;
 		},
+		setUserPlayer: (state, action) => {
+			state.user.players = [...state.user.players, action.payload];
+		},
+		setUserPlayerAvatar: (state, action) => {
+			const { id, avatar } = action.payload;
+
+			const updatedPlayers = state.user.players.map((player) =>
+				player._id === id ? { ...player, avatar } : player
+			);
+
+			state.user.players = updatedPlayers;
+		},
 	},
 });
 
-export const { setUser, clearUser, setSignedIn } = userSlice.actions;
+export const {
+	setUser,
+	clearUser,
+	setSignedIn,
+	setUserPlayer,
+	setUserPlayerAvatar,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,47 +1,18 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Placeholder from 'placeholders/avatar-placeholder.png';
 import { getUserId } from 'store/selectors/user';
+import { setUserPlayerAvatar } from 'store/slices/user';
 import { uploadAvatar } from 'services/avatar';
 
 const AvatarUpload = ({ playerId }) => {
 	const userId = useSelector(getUserId);
+	const dispatch = useDispatch();
+
 	const [image, setImage] = useState(null);
 	const [percentage, setPercentage] = useState(0);
-
-	const sendImage = async () => {
-		if (!image) {
-			return;
-		}
-
-		const formData = new FormData();
-		const type = image.split('.')[1];
-
-		formData.append('avatar', {
-			uri: image,
-			name: `${playerId || userId}_avatar`,
-			type: `image/${type}`,
-		});
-
-		if (!!playerId) {
-			formData.append('playerId', playerId);
-		}
-
-		try {
-			await uploadAvatar(formData, (event) => {
-				const progress = Math.round((event.loaded / event.total) * 100);
-				setPercentage(progress);
-
-				console.log(
-					`Upload progress: ${progress}%, loaded: ${event.loaded}, total: ${event.total}`
-				);
-			});
-		} catch (error) {
-			console.log('Error uploading avatar', error);
-		}
-	};
 
 	const pickImage = async () => {
 		const { status } =
@@ -60,9 +31,56 @@ const AvatarUpload = ({ playerId }) => {
 			const { uri } = result.assets[0];
 
 			setImage(uri);
-			sendImage();
 		}
 	};
+
+	const sendImage = async () => {
+		console.log('Image', image);
+		if (!image) {
+			return;
+		}
+
+		const id = playerId || userId;
+
+		const formData = new FormData();
+		const type = image.split('.')[1];
+
+		formData.append('avatar', {
+			uri: image,
+			name: `${id}_avatar`,
+			type: `image/${type}`,
+		});
+
+		if (!!playerId) {
+			formData.append('playerId', playerId);
+		}
+
+		try {
+			const url = await uploadAvatar(formData, (event) => {
+				const progress = Math.round((event.loaded / event.total) * 100);
+				setPercentage(progress);
+
+				console.log(
+					`Upload progress: ${progress}%, loaded: ${event.loaded}, total: ${event.total}`
+				);
+			});
+
+			dispatch(
+				setUserPlayerAvatar({
+					id,
+					avatar: url,
+				})
+			);
+		} catch (error) {
+			console.log('Error uploading avatar', error);
+		}
+	};
+
+	useEffect(() => {
+		if (!!image) {
+			sendImage();
+		}
+	}, [image]);
 
 	return (
 		<View>

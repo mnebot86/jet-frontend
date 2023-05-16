@@ -26,6 +26,7 @@ const Main = () => {
 
 			if (!!token) {
 				await verifyUser(token).then((res) => {
+					console.log(res.data);
 					dispatch(setUser(res.data));
 				});
 			} else {

@@ -1,13 +1,13 @@
-import { SwipeListView } from 'react-native-swipe-list-view';
-import { useTheme } from 'styled-components';
-import { useSelector } from 'react-redux';
-import { getRoster } from 'store/selectors/user';
-import PlayerCard from './PlayerCard';
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { useTheme } from 'styled-components';
+import { StyleSheet, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import PlayerCard from './PlayerCard';
+import { getPlayers } from 'store/selectors/user';
 
-const RosterScreen = () => {
-	const roster = useSelector(getRoster);
+const PlayerScreen = () => {
+	const players = useSelector(getPlayers);
 	const theme = useTheme();
 
 	const styles = StyleSheet.create({
@@ -31,7 +31,7 @@ const RosterScreen = () => {
 	return (
 		<SwipeListView
 			style={styles.container}
-			data={roster}
+			data={players}
 			renderItem={(data, rowMap) => (
 				<View style={styles.rowFront}>
 					<PlayerCard {...data.item} />
@@ -49,4 +49,4 @@ const RosterScreen = () => {
 	);
 };
 
-export default RosterScreen;
+export default PlayerScreen;
