@@ -1,6 +1,12 @@
 import React from 'react';
 import { useTheme } from 'styled-components';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+	StyleSheet,
+	Text,
+	View,
+	Animated,
+	TouchableHighlight,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import PlayerCard from './PlayerCard';
@@ -9,6 +15,12 @@ import { getPlayers } from 'store/selectors/user';
 const PlayerScreen = () => {
 	const players = useSelector(getPlayers);
 	const theme = useTheme();
+
+	const renderItem = (data) => (
+		<View>
+			<PlayerCard {...data.item} />
+		</View>
+	);
 
 	const styles = StyleSheet.create({
 		container: {
@@ -28,15 +40,25 @@ const PlayerScreen = () => {
 		},
 	});
 
+	const noPlayers = players.length < 1;
+
+	if (noPlayers) {
+		return (
+			<View
+				style={[
+					styles.container,
+					{ justifyContent: 'center', alignItems: 'center' },
+				]}>
+				<Text>No Players Registered</Text>
+			</View>
+		);
+	}
+
 	return (
 		<SwipeListView
 			style={styles.container}
 			data={players}
-			renderItem={(data, rowMap) => (
-				<View style={styles.rowFront}>
-					<PlayerCard {...data.item} />
-				</View>
-			)}
+			renderItem={renderItem}
 			renderHiddenItem={(data, rowMap) => (
 				<View style={styles.rowBack}>
 					<Text style={styles.text}>Left</Text>

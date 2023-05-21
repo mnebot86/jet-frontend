@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from 'styled-components';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import PlayersScreen from 'screens/PlayersScreen/container';
+import PlayersStack from 'navigation/PlayersStack';
 import GameScreen from 'screens/GamesScreen/container';
 import SettingScreen from 'screens/SettingsScreen/container';
 import RegistrationStack from 'navigation/RegistrationStack';
@@ -21,7 +21,14 @@ const DashboardStack = () => {
 				headerBackTitleVisible: false,
 				...styles,
 			}}>
-			<Tab.Screen name="Players" component={PlayersScreen} />
+			<Tab.Screen
+				name="PlayersStack"
+				component={PlayersStack}
+				options={{
+					title: 'Players',
+					headerShown: false,
+				}}
+			/>
 
 			<Tab.Screen
 				name="RegistrationStack"

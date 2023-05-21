@@ -82,7 +82,7 @@ const RegistrationScreen = () => {
 			medicalConditions: !!medical ? medical.split(', ') : [],
 			role: playerType,
 			group,
-			doctor: doctorName,
+			doctorName,
 			doctorNumber: doctorPhone,
 		};
 

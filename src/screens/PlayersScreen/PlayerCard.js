@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useTheme } from 'styled-components';
+import { useNavigation } from '@react-navigation/native';
 
 const PlayerCard = ({
 	firstName,
@@ -9,8 +10,14 @@ const PlayerCard = ({
 	avatar,
 	jerseyNumber,
 	group,
+	_id,
 }) => {
 	const theme = useTheme();
+	const { navigate } = useNavigation();
+
+	const handlePress = () => {
+		navigate('PlayerDetail', { id: _id });
+	};
 
 	const styles = StyleSheet.create({
 		container: {
@@ -39,7 +46,10 @@ const PlayerCard = ({
 	});
 
 	return (
-		<View style={styles.container}>
+		<TouchableOpacity
+			onPress={handlePress}
+			activeOpacity={0.9}
+			style={styles.container}>
 			<View style={styles.section}>
 				{!!avatar && (
 					<Image source={{ uri: avatar.url }} style={styles.image} />
@@ -58,7 +68,7 @@ const PlayerCard = ({
 				<Text>{jerseyNumber}</Text>
 				<Text>{position}</Text>
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 };
 
