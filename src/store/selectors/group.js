@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-
+import { get } from 'lodash';
 export const groupSlice = (state) => state.group || [];
 
 export const getGroupNamesAndIds = createSelector(groupSlice, (state) => {
@@ -7,10 +7,10 @@ export const getGroupNamesAndIds = createSelector(groupSlice, (state) => {
 		return [];
 	}
 
-	return Object.keys(state.groups).map((groupId) => ({
-		id: state.groups[groupId]._id,
-		name: state.groups[groupId].name,
-		min: state.groups[groupId].ages.min,
-		max: state.groups[groupId].ages.max,
+	return Object.keys(get(state, 'groups.data')).map((groupId) => ({
+		id: get(state, `groups.data[${groupId}]._id`),
+		name: get(state, `groups.data[${groupId}].name`),
+		min: get(state, `groups.data[${groupId}].ages.min`),
+		max: get(state, `groups.data[${groupId}].ages.max`),
 	}));
 });

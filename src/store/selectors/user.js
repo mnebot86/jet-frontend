@@ -35,3 +35,7 @@ export const getNextGame = createSelector(getGames, (games) => {
 
 	return upcomingGames?.length > 0 ? upcomingGames[0] : null;
 });
+
+export const getRoles = createSelector(currentUser, (state) =>
+	get(state, 'user.roles')
+);

@@ -10,10 +10,9 @@ const Logout = () => {
 	const handlePress = () => {
 		deleteAuthToken();
 		dispatch(clearUser());
-		console.log('Logout');
 	};
 
-	return <Button title="Logo" onPress={handlePress} />;
+	return <Button title="Logout" onPress={handlePress} />;
 };
 
 export default Logout;
