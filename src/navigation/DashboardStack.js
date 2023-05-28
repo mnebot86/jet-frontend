@@ -36,7 +36,7 @@ const DashboardStack = () => {
 				options={{ headerShown: false, title: 'Dashboard' }}
 			/>
 
-			<Tab.Screen name="Games" component={GameScreen} />
+			{/* <Tab.Screen name="Games" component={GameScreen} /> */}
 
 			<Tab.Screen name="Settings" component={SettingScreen} />
 		</Tab.Navigator>

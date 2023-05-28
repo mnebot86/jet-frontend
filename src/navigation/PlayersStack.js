@@ -1,8 +1,9 @@
 import React from 'react';
 import { useTheme } from 'styled-components';
 import { createStackNavigator } from '@react-navigation/stack';
-import PlayersScreen from '../screens/PlayersScreen/container';
-import PlayerDetailScreen from '../screens/PlayerDetailScreen/container';
+import PlayersScreen from 'screens/PlayersScreen/container';
+import PlayerDetailScreen from 'screens/PlayerDetailScreen/container';
+import GroupDetailScreen from 'screens/GroupDetailScreen/container';
 import { navigationStyles } from 'styles/navigation/style';
 
 const Stack = createStackNavigator();
@@ -24,6 +25,12 @@ const RegistrationStack = () => {
 				name="PlayerDetail"
 				component={PlayerDetailScreen}
 				options={{ title: 'Profile' }}
+			/>
+
+			<Stack.Screen
+				name="GroupDetail"
+				component={GroupDetailScreen}
+				options={{ title: 'Group' }}
 			/>
 		</Stack.Navigator>
 	);

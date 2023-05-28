@@ -2,12 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import {
+	StyleSheet,
+	Text,
+	View,
+	Image,
+	ScrollView,
+	Button,
+} from 'react-native';
 import { getPlayer } from '../../services/player';
 import moment from 'moment';
 
-const PlayerDetailScreen = () => {
+const PlayerDetailScreen = ({ navigation }) => {
 	const route = useRoute();
+	const { navigate } = navigation;
 	const { id } = route.params;
 
 	const [player, setPlayer] = useState({});
@@ -39,8 +47,16 @@ const PlayerDetailScreen = () => {
 		doctorNumber,
 	} = player;
 
+	const handleGroupBtnPress = () => {
+		navigate('GroupDetail', { id: group._id });
+	};
+
 	return (
 		<ScrollView style={styles.container}>
+			<Button
+				title={`${group?.name} Page`}
+				onPress={handleGroupBtnPress}
+			/>
 			<Image
 				source={{ uri: avatar?.url }}
 				style={{ width: '100%', height: 300 }}
@@ -112,8 +128,15 @@ const PlayerDetailScreen = () => {
 				<Text>Guardians</Text>
 
 				{guardians?.map((guardian, idx) => (
-					<View key={`guardian-${idx}`}>
-						<Text>{guardian.email}</Text>
+					<View key={`guardian-${idx}`} style={styles.guardianCard}>
+						<Image
+							source={{ uri: guardian.avatar.url }}
+							style={styles.image}
+						/>
+
+						<View>
+							<Text>{guardian.email}</Text>
+						</View>
 					</View>
 				))}
 			</View>
@@ -122,7 +145,7 @@ const PlayerDetailScreen = () => {
 				<Text>Allergies</Text>
 
 				{allergies?.map((allergy, idx) => {
-					<Text key={`allgery-${idx}`}>{allergy}</Text>;
+					<Text key={`allergy-${idx}`}>{allergy}</Text>;
 				})}
 			</View>
 
@@ -158,6 +181,15 @@ const styles = StyleSheet.create({
 	address: {
 		marginBottom: 5,
 		fontSize: 18,
+	},
+	image: {
+		width: 50,
+		height: 50,
+	},
+	guardianCard: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
 	},
 });
 
