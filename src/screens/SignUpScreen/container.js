@@ -9,7 +9,7 @@ import { register, setAuthToken } from 'services/auth';
 import { global } from 'styles/globalStyles';
 import { setSignedIn } from 'store/slices/user';
 
-const Register = () => {
+const SignUp = () => {
 	const dispatch = useDispatch();
 	const theme = useTheme();
 	const styles = RegisterScreenStyles(theme);
@@ -99,4 +99,4 @@ const Register = () => {
 	);
 };
 
-export default Register;
+export default SignUp;
