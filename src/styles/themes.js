@@ -23,6 +23,7 @@ export const LIGHT_THEME = {
 	primaryInputTextColor: coal,
 	primaryActiveIconColor: gold,
 	primaryInactiveIconColor: navyBlue,
+	primaryFocusColor: gold,
 };
 
 export const DARK_THEME = {
@@ -38,4 +39,5 @@ export const DARK_THEME = {
 	primaryInputTextColor: light,
 	primaryActiveIconColor: gold,
 	primaryInactiveIconColor: navyBlue,
+	primaryFocusColor: gold,
 };

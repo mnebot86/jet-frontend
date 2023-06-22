@@ -51,7 +51,8 @@
 		"react-native-swipe-list-view": "^3.2.9",
 		"react-native-web": "~0.18.11",
 		"react-redux": "^8.0.5",
-		"styled-components": "^5.3.9"
+		"styled-components": "^5.3.9",
+		"uuidv4": "^6.2.13"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.20.0",

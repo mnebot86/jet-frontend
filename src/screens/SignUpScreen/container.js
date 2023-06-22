@@ -1,102 +1,113 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { useTheme } from 'styled-components';
-import { Text, ScrollView, View, KeyboardAvoidingView } from 'react-native';
-import { Button, Input, SafeArea } from 'components';
-import { RegisterScreenStyles } from 'styles/Register/style';
-import { ROLE } from 'utils/auth';
+import { get } from 'lodash';
+import styled from 'styled-components';
+import { Input, AvatarUpload, Button } from 'components';
 import { register, setAuthToken } from 'services/auth';
-import { global } from 'styles/globalStyles';
 import { setSignedIn } from 'store/slices/user';
 
-const SignUp = () => {
+const SignUpScreen = () => {
 	const dispatch = useDispatch();
-	const theme = useTheme();
-	const styles = RegisterScreenStyles(theme);
 
+	const [avatar, setAvatar] = useState(null);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
-	const [hasError, setHasError] = useState(false);
-	const [errorMessage, setErrorMessage] = useState('');
+	const [error, setError] = useState(null);
+	const [showPassword, setShowPassword] = useState(false);
 
-	const handleSubmit = async () => {
+	const togglePassword = useCallback(() => {
+		setShowPassword(!showPassword);
+	}, [showPassword]);
+
+	const handleSubmit = useCallback(async () => {
 		const data = {
-			role: ROLE.GUARDIAN,
 			email,
 			password,
-			confirmPassword,
+			avatar: avatar,
 		};
 
-		await register(data).then((data) => {
-			if (!!data.error) {
-				setErrorMessage(data.error);
-				setHasError(true);
+		const result = await register(data);
 
-				setEmail('');
-				setPassword('');
-				setConfirmPassword('');
+		const token = get(result, 'data.token');
+		const errorMessage = result?.error;
 
-				return;
-			}
-
-			setAuthToken(data.token);
-			dispatch(setSignedIn());
-		});
-	};
+		if (!!errorMessage) setError(errorMessage);
+		if (!!token) {
+			await setAuthToken(token);
+			await dispatch(setSignedIn());
+		}
+	}, [email, password, avatar, dispatch]);
 
 	return (
-		<SafeArea>
-			<KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-				<ScrollView contentContainerStyle={styles.container}>
-					<View>
-						<Text style={styles.header}>
-							Join our football family!
-						</Text>
-						<Text style={styles.subHeader}>
-							We can't wait to see you on the field!
-						</Text>
-					</View>
+		<Container>
+			<Header>Create Account</Header>
 
-					<View>
-						<Input
-							placeholder="Email"
-							placeholderTextColor={theme.primaryInputTextColor}
-							value={email}
-							onChangeText={setEmail}
-							autoCapitalize="none"
-						/>
+			<AvatarWrapper>
+				<AvatarUpload setAvatar={setAvatar} />
+			</AvatarWrapper>
 
-						<Input
-							placeholder="Password"
-							placeholderTextColor={theme.primaryInputTextColor}
-							value={password}
-							onChangeText={setPassword}
-							secureTextEntry={true}
-						/>
+			<InputWrapper>
+				<Input
+					label="Email"
+					name="email"
+					value={email}
+					onChangeText={setEmail}
+					autoCapitalize="none"
+					error={error}
+				/>
+			</InputWrapper>
 
-						<Input
-							placeholder="Confirm Password"
-							placeholderTextColor={theme.primaryInputTextColor}
-							value={confirmPassword}
-							onChangeText={setConfirmPassword}
-							secureTextEntry={true}
-						/>
-					</View>
+			<InputWrapper>
+				<Input
+					label="Password"
+					name="password"
+					value={password}
+					onChangeText={setPassword}
+					autoCapitalize="none"
+					showPassword={showPassword}
+					secureTextEntry={!showPassword}
+					togglePassword={togglePassword}
+					type="password"
+					error={error}
+				/>
+			</InputWrapper>
 
-					{hasError && (
-						<View style={global.errorContainer}>
-							<Text style={global.errorText}>{errorMessage}</Text>
-						</View>
-					)}
-
-					<View style={styles.btnContainer}>
-						<Button title="Submit" onPress={handleSubmit} />
-					</View>
-				</ScrollView>
-			</KeyboardAvoidingView>
-		</SafeArea>
+			<ButtonWrapper>
+				<Button
+					title="Submit"
+					onPress={handleSubmit}
+					disabled={!avatar}
+				/>
+			</ButtonWrapper>
+		</Container>
 	);
 };
 
-export default SignUp;
+export default SignUpScreen;
+
+const Container = styled.View`
+	flex: 1;
+	padding: 10px 20px;
+	background-color: ${({ theme }) => theme.primaryBackground};
+`;
+
+const Header = styled.Text`
+	color: ${({ theme }) => theme.primaryText};
+	font-size: 30px;
+	font-weight: bold;
+	text-align: center;
+	margin: 50px 0 20px 0;
+`;
+
+const AvatarWrapper = styled.View`
+	margin-bottom: 30px;
+`;
+
+const InputWrapper = styled.View`
+	margin-bottom: 40px;
+`;
+
+const ButtonWrapper = styled.View`
+	margin-top: 30px;
+	align-items: center;
+`;

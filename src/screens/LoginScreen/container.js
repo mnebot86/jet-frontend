@@ -1,24 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { useTheme } from 'styled-components';
-import { Text, View } from 'react-native';
+import styled, { useTheme } from 'styled-components';
 import { Button, Input } from 'components';
-import { RegisterScreenStyles } from '../../styles/Register/style';
 import { login, setAuthToken } from 'services/auth';
 import { setSignedIn } from 'store/slices/user';
-import { global } from 'styles/globalStyles';
 
 const Login = () => {
 	const dispatch = useDispatch();
-	const theme = useTheme();
-	const styles = RegisterScreenStyles(theme);
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [hasError, setHasError] = useState(false);
-	const [errorMessage, setErrorMessage] = useState('');
+	const [error, setError] = useState(null);
+	const [showPassword, setShowPassword] = useState(false);
 
-	const handleSubmit = async () => {
+	const togglePassword = useCallback(() => {
+		setShowPassword(!showPassword);
+	}, [showPassword]);
+
+	const handleSubmit = useCallback(async () => {
 		const data = {
 			email,
 			password,
@@ -26,8 +25,8 @@ const Login = () => {
 
 		await login(data).then((data) => {
 			if (!!data.error) {
-				setErrorMessage(data.error);
-				setHasError(true);
+				console.log('DATA', data.error);
+				setError(data.error);
 
 				setEmail('');
 				setPassword('');
@@ -39,46 +38,59 @@ const Login = () => {
 
 			dispatch(setSignedIn());
 		});
-	};
+	}, [email, password]);
 
 	return (
-		<View style={styles.container}>
-			<View>
-				<Text style={styles.header}>Welcome back to the game!</Text>
-				<Text style={styles.subHeader}>
-					Let's get back on the field and pick up where we left off!
-				</Text>
-			</View>
-
-			<View>
+		<Container>
+			<InputWrapper>
 				<Input
-					placeholder="Email"
-					placeholderTextColor={theme.primaryInputTextColor}
+					label="Email"
+					name="email"
 					value={email}
 					onChangeText={setEmail}
 					autoCapitalize="none"
+					error={error}
 				/>
 
-				<Input
-					placeholder="Password"
-					placeholderTextColor={theme.primaryInputTextColor}
-					value={password}
-					onChangeText={setPassword}
-					secureTextEntry={true}
-				/>
-			</View>
+				<SecondInputWrapper>
+					<Input
+						label="Password"
+						name="password"
+						value={password}
+						onChangeText={setPassword}
+						showPassword={showPassword}
+						togglePassword={togglePassword}
+						secureTextEntry={true}
+						error={error}
+						type="password"
+					/>
+				</SecondInputWrapper>
+			</InputWrapper>
 
-			{hasError && (
-				<View style={global.errorContainer}>
-					<Text style={global.errorText}>{errorMessage}</Text>
-				</View>
-			)}
-
-			<View style={styles.btnContainer}>
+			<ButtonWrapper>
 				<Button title="Submit" onPress={handleSubmit} />
-			</View>
-		</View>
+			</ButtonWrapper>
+		</Container>
 	);
 };
 
 export default Login;
+
+const Container = styled.View`
+	flex: 1;
+	background: ${({ theme }) => theme.primaryBackground};
+	padding: 10px 20px;
+`;
+
+const InputWrapper = styled.View`
+	margin: 80px 0;
+	justify-content: space-between;
+`;
+
+const SecondInputWrapper = styled.View`
+	margin-top: 40px;
+`;
+
+const ButtonWrapper = styled.View`
+	align-items: center;
+`;

@@ -9,8 +9,8 @@ import { verifyUser, getAuthToken } from 'services/auth';
 import { getGroups } from 'services/groups';
 import { getSignedIn } from 'store/selectors/user';
 import { setUser, clearUser } from 'store/slices/user';
-import { navigationStyles } from 'styles/navigation/style';
 import { setGroups } from 'store/slices/group';
+import { navigationStyles } from 'styles/navigation/style';
 
 const Stack = createStackNavigator();
 
@@ -26,7 +26,6 @@ const Main = () => {
 
 			if (!!token) {
 				await verifyUser(token).then((res) => {
-					console.log(res.data);
 					dispatch(setUser(res.data));
 				});
 			} else {

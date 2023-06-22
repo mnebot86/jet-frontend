@@ -4,7 +4,7 @@ import { useTheme } from 'styled-components';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import { get } from 'lodash';
 import { SafeArea, Input, DateTimeInput, CheckBox } from 'components';
-import AvatarUpload from '../SettingsScreen/AvatarUpload';
+import AvatarUpload from 'components/AvatarUpload';
 import { setUserPlayer } from 'store/slices/user';
 import { getGroupNamesAndIds } from 'store/selectors/group';
 import { addPlayer } from 'services/player';
