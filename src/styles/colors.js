@@ -1,5 +1,5 @@
-export const navyBlue = '#004aad';
-export const gold = '#ffd700';
+export const navyBlue = '#2053EE';
+export const gold = '#EEE220';
 export const black = '#000';
 export const white = '#fff';
 export const lightGray = '#f8f8f8';

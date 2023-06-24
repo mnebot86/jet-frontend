@@ -4,3 +4,4 @@ export { default as CheckBox } from './CheckBox';
 export { default as Input } from './Input';
 export { default as Alert } from './Alert';
 export { default as DateTimeInput } from './DateTimeInput';
+export { default as AvatarUpload } from './AvatarUpload';

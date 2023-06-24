@@ -16,7 +16,7 @@ const DashboardStack = () => {
 	const theme = useTheme();
 	const styles = navigationStyles(theme);
 
-	const COACH = roles.includes('COACH');
+	// const COACH = roles.includes('COACH');
 
 	return (
 		<Tab.Navigator
@@ -41,7 +41,7 @@ const DashboardStack = () => {
 				options={{ headerShown: false, title: 'Dashboard' }}
 			/>
 
-			{COACH && <Tab.Screen name="Games" component={GameScreen} />}
+			{/* {COACH && <Tab.Screen name="Games" component={GameScreen} />} */}
 
 			<Tab.Screen name="Settings" component={SettingScreen} />
 		</Tab.Navigator>
