@@ -4,13 +4,13 @@ import styled, { useTheme } from 'styled-components';
 import { Button, Input } from 'components';
 import { login, setAuthToken } from 'services/auth';
 import { setSignedIn } from 'store/slices/user';
+import { openToast, closeToast } from '../../store/slices/toast';
 
 const Login = () => {
 	const dispatch = useDispatch();
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [error, setError] = useState(null);
 	const [showPassword, setShowPassword] = useState(false);
 
 	const togglePassword = useCallback(() => {
@@ -25,18 +25,38 @@ const Login = () => {
 
 		await login(data).then((data) => {
 			if (!!data.error) {
-				console.log('DATA', data.error);
-				setError(data.error);
+				dispatch(
+					openToast({
+						isOpen: true,
+						message: data.error,
+						messageType: 'error',
+					})
+				);
 
 				setEmail('');
 				setPassword('');
 
-				return;
+				setTimeout(() => {
+					dispatch(closeToast());
+				}, 4000);
 			}
 
-			setAuthToken(data.token);
+			if (!!data.token) {
+				setAuthToken(data.token);
 
-			dispatch(setSignedIn());
+				dispatch(
+					openToast({
+						isOpen: true,
+						message: 'Success',
+						messageType: 'success',
+					})
+				);
+
+				setTimeout(() => {
+					dispatch(closeToast());
+					dispatch(setSignedIn());
+				}, 1000);
+			}
 		});
 	}, [email, password]);
 
@@ -49,7 +69,6 @@ const Login = () => {
 					value={email}
 					onChangeText={setEmail}
 					autoCapitalize="none"
-					error={error}
 				/>
 
 				<SecondInputWrapper>
@@ -58,11 +77,7 @@ const Login = () => {
 						name="password"
 						value={password}
 						onChangeText={setPassword}
-						showPassword={showPassword}
-						togglePassword={togglePassword}
 						secureTextEntry={true}
-						error={error}
-						type="password"
 					/>
 				</SecondInputWrapper>
 			</InputWrapper>

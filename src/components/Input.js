@@ -1,7 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { get } from 'lodash';
-import { StyleSheet, TextInput, Image } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import React, { useState, useCallback, useMemo } from 'react';
+import { Image } from 'react-native';
 import styled from 'styled-components';
 
 const Input = ({
@@ -13,47 +11,29 @@ const Input = ({
 	secureTextEntry,
 	keyboardType,
 	label,
-	showPassword,
-	togglePassword,
 	type,
-	error,
 	name,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
-	const [errorMessage, setErrorMessage] = useState(null);
-	const [errorField, setErrorField] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
 
-	const handleFocus = () => {
+	const handleFocus = useCallback(() => {
 		setIsFocused(true);
-	};
+	}, []);
 
-	const handleBlur = () => {
+	const handleBlur = useCallback(() => {
 		setIsFocused(false);
-	};
+	}, []);
 
-	useEffect(() => {
-		if (!!error) {
-			const regex = /"([^"]+)"/;
+	const togglePassword = useCallback(() => {
+		setShowPassword(!showPassword);
+	}, [showPassword]);
 
-			const matches = error.match(regex);
-			const extractedString =
-				matches && matches.length > 1 ? matches[1] : '';
-
-			if (extractedString.toLowerCase() === name) {
-				setErrorMessage(error);
-				setErrorField(extractedString);
-			} else {
-				setErrorMessage(null);
-				setErrorField('');
-			}
-		}
-	}, [error, errorMessage]);
-
-	const renderLock = () => {
+	const renderLock = useMemo(() => {
 		if (type === 'password' && !showPassword) {
 			return (
 				<IconWrapper onPress={togglePassword}>
-					<Image source={require('icons/lock.png')} width={10} />
+					<Image source={require('icons/show-password.png')} />
 				</IconWrapper>
 			);
 		}
@@ -61,15 +41,15 @@ const Input = ({
 		if (type === 'password' && showPassword) {
 			return (
 				<IconWrapper onPress={togglePassword}>
-					<Image source={require('icons/unlock.png')} width={10} />
+					<Image source={require('icons/hide-password.png')} />
 				</IconWrapper>
 			);
 		}
-	};
+	}, [type, showPassword]);
 
 	return (
 		<>
-			<Wrapper isFocused={isFocused} errorField={errorField} name={name}>
+			<Wrapper isFocused={isFocused} name={name}>
 				{!!label ? <Label>{label}</Label> : null}
 
 				<StyledInput
@@ -78,16 +58,14 @@ const Input = ({
 					value={value}
 					onChangeText={onChangeText}
 					autoCapitalize={autoCapitalize}
-					secureTextEntry={secureTextEntry}
+					secureTextEntry={showPassword ? false : secureTextEntry}
 					keyboardType={keyboardType}
 					onFocus={handleFocus}
 					onBlur={handleBlur}
 				/>
 
-				{renderLock()}
+				{renderLock}
 			</Wrapper>
-
-			{!!errorMessage ? <TextError>{errorMessage}</TextError> : null}
 		</>
 	);
 };
@@ -102,12 +80,8 @@ const Wrapper = styled.View`
 	border-width: 2px;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	background: ${({ theme }) => theme.primaryInputBackgroundColor};
-	border-color: ${({ theme, errorField, isFocused, name }) =>
-		errorField === name && errorField !== ''
-			? 'red'
-			: isFocused
-			? theme.primaryFocusColor
-			: theme.primaryInputBorderColor};
+	border-color: ${({ theme, isFocused, name }) =>
+		isFocused ? theme.primaryFocusColor : theme.primaryInputBorderColor};
 `;
 
 const StyledInput = styled.TextInput`
@@ -126,17 +100,12 @@ const Label = styled.Text`
 	top: -8px;
 	left: 30px;
 	background: ${({ theme }) => theme.primaryBackground};
-	width: 80px;
+	padding: 0 15px;
 	text-align: center;
 	z-index: 1;
 `;
 
 const IconWrapper = styled.TouchableOpacity`
 	padding: 5px;
-	background: ${({ theme }) => theme.primaryInputBackgroundColor};
-`;
-
-const TextError = styled.Text`
-	color: red;
-	margin-top: 10px;
+	background: ${({ theme }) => theme.primaryBackground};
 `;

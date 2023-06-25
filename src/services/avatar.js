@@ -3,11 +3,9 @@ import { getAuthToken } from 'services/auth';
 
 export const uploadAvatar = async (formData, onUploadProgress) => {
 	try {
-		const token = await getAuthToken();
 		const headers = {
 			Accept: 'application/json',
 			'Content-Type': 'multipart/form-data',
-			Authorization: `Bearer ${token}`,
 		};
 
 		const res = await server.post(`/avatar`, formData, {
