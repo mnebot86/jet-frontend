@@ -1,10 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import alertReducer from '../slices/alert';
+import toastReducer from '../slices/toast';
 import userReducer from '../slices/user';
 import groupReducer from '../slices/group';
 
 const rootReducer = combineReducers({
-	alert: alertReducer,
+	toast: toastReducer,
 	user: userReducer,
 	group: groupReducer,
 });

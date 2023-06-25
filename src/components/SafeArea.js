@@ -4,6 +4,7 @@ import { useTheme } from 'styled-components';
 
 const SafeArea = ({ children }) => {
 	const theme = useTheme();
+
 	const isIos = Platform.OS === 'ios';
 	const paddingTop = isIos ? 0 : StatusBar.currentHeight;
 

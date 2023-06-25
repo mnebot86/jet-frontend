@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Input, AvatarUpload, Button } from 'components';
 import { register, setAuthToken } from 'services/auth';
 import { setSignedIn } from 'store/slices/user';
+import { openToast, closeToast } from 'store/slices/toast';
 
 const SignUpScreen = () => {
 	const dispatch = useDispatch();
@@ -12,12 +13,6 @@ const SignUpScreen = () => {
 	const [avatar, setAvatar] = useState(null);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [error, setError] = useState(null);
-	const [showPassword, setShowPassword] = useState(false);
-
-	const togglePassword = useCallback(() => {
-		setShowPassword(!showPassword);
-	}, [showPassword]);
 
 	const handleSubmit = useCallback(async () => {
 		const data = {
@@ -31,10 +26,35 @@ const SignUpScreen = () => {
 		const token = get(result, 'data.token');
 		const errorMessage = result?.error;
 
-		if (!!errorMessage) setError(errorMessage);
+		if (!!errorMessage) {
+			dispatch(
+				openToast({
+					isOpen: true,
+					message: errorMessage,
+					messageType: 'error',
+				})
+			);
+
+			setTimeout(() => {
+				dispatch(closeToast());
+			}, 4000);
+		}
+
 		if (!!token) {
 			await setAuthToken(token);
-			await dispatch(setSignedIn());
+
+			dispatch(
+				openToast({
+					isOpen: true,
+					message: 'Account Created!',
+					messageType: 'success',
+				})
+			);
+
+			setTimeout(() => {
+				dispatch(closeToast());
+				dispatch(setSignedIn());
+			}, 1000);
 		}
 	}, [email, password, avatar, dispatch]);
 
@@ -53,7 +73,6 @@ const SignUpScreen = () => {
 					value={email}
 					onChangeText={setEmail}
 					autoCapitalize="none"
-					error={error}
 				/>
 			</InputWrapper>
 
@@ -64,11 +83,8 @@ const SignUpScreen = () => {
 					value={password}
 					onChangeText={setPassword}
 					autoCapitalize="none"
-					showPassword={showPassword}
-					secureTextEntry={!showPassword}
-					togglePassword={togglePassword}
+					secureTextEntry
 					type="password"
-					error={error}
 				/>
 			</InputWrapper>
 
