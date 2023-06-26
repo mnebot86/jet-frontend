@@ -5,3 +5,4 @@ export { default as Input } from './Input';
 export { default as Toast } from './Toast';
 export { default as DateTimeInput } from './DateTimeInput';
 export { default as AvatarUpload } from './AvatarUpload';
+export { default as CustomModal } from './CustomModal';

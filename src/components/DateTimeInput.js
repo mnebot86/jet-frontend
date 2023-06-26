@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { Appearance } from 'react-native';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+// import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
 const DateTimeInput = ({ birthday, setBirthday }) => {
@@ -44,6 +45,7 @@ const DateTimeInput = ({ birthday, setBirthday }) => {
 			backgroundColor: theme.primaryBackground,
 		},
 	});
+	return null;
 
 	return (
 		<View>
