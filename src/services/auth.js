@@ -27,6 +27,7 @@ export const deleteAuthToken = async () => {
 };
 
 export const register = async (data) => {
+	console.log('SERVICE', data);
 	try {
 		const res = await server.post('/auth/register', data);
 
@@ -59,5 +60,12 @@ export const login = async (data) => {
 export const verifyUser = async (token) => {
 	const headers = !!token ? { Authorization: `Bearer ${token}` } : {};
 	const config = { headers };
-	return await server.get('/auth/verifyUser', config).then((res) => res.data);
+
+	try {
+		const response = await server.get('/auth/verifyUser', config);
+		return response.data;
+	} catch (error) {
+		console.log('Error:', error);
+		throw error;
+	}
 };

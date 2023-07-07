@@ -71,7 +71,7 @@ const AvatarUpload = ({ setAvatar }) => {
 	return (
 		<View>
 			<View>
-				<ImageWrapper onPress={pickImage}>
+				<ImageWrapper style={{ borderRadius: 100 }} onPress={pickImage}>
 					{!image ? (
 						<StyledImage source={Placeholder} resizeMode="cover" />
 					) : (
@@ -101,7 +101,6 @@ const ImageWrapper = styled.TouchableOpacity`
 	aspect-ratio: 1;
 	flex-direction: row;
 	justify-content: center;
-	border-radius: 100%;
 	border: 2px solid black;
 	width: 150px;
 	align-self: center;

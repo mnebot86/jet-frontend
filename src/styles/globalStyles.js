@@ -27,7 +27,7 @@ export const global = StyleSheet.create({
 	errorContainer: {
 		borderWidth: 2,
 		padding: 20,
-		borderRadius: 5,
+		// borderRadius: 5,
 		borderColor: 'red',
 		borderStyle: 'solid',
 		width: '100%',

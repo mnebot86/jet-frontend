@@ -6,7 +6,7 @@
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
-		"jeEngine": "hermes",
+		"jsEngine": "hermes",
 		"splash": {
 			"image": "./assets/splash.png",
 			"resizeMode": "contain",
@@ -14,7 +14,6 @@
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"jsEngine": "jsc",
 			"supportsTablet": true,
 			"bundleIdentifier": "com.miguel86.npjets"
 		},

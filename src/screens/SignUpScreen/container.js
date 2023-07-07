@@ -23,6 +23,8 @@ const SignUpScreen = () => {
 
 		const result = await register(data);
 
+		console.log({ result });
+
 		const token = get(result, 'data.token');
 		const errorMessage = result?.error;
 

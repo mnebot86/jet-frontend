@@ -11,7 +11,7 @@ import { navigationStyles } from 'styles/navigation/style';
 
 const Tab = createBottomTabNavigator();
 
-const DashboardStack = () => {
+const FeedStack = () => {
 	const roles = useSelector(getRoles);
 	const theme = useTheme();
 	const styles = navigationStyles(theme);
@@ -48,4 +48,4 @@ const DashboardStack = () => {
 	);
 };
 
-export default DashboardStack;
+export default FeedStack;

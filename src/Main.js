@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AuthStack from 'navigation/AuthStack';
-import DashboardStack from 'navigation/DashboardStack';
+import FeedStack from 'navigation/FeedStack';
 import { verifyUser, getAuthToken } from 'services/auth';
 import { getGroups } from 'services/groups';
 import { getSignedIn } from 'store/selectors/user';
@@ -25,6 +25,11 @@ const Main = () => {
 			const token = await getAuthToken();
 
 			if (!!token) {
+				console.tron.display({
+					name: 'Network',
+					preview: 'network status',
+					value: token,
+				});
 				await verifyUser(token).then((res) => {
 					dispatch(setUser(res.data));
 				});
@@ -64,8 +69,8 @@ const Main = () => {
 					/>
 				) : (
 					<Stack.Screen
-						name="DashboardStack"
-						component={DashboardStack}
+						name="FeedStack"
+						component={FeedStack}
 						options={{ headerShown: false }}
 					/>
 				)}

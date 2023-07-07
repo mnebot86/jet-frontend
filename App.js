@@ -6,6 +6,11 @@ import Main from 'src/Main';
 import { Toast } from 'components';
 import { LIGHT_THEME, DARK_THEME } from 'styles/themes';
 import store from 'store';
+import 'react-native-get-random-values';
+
+if (__DEV__) {
+	import('./reactotronConfig');
+}
 
 const App = () => {
 	const colorScheme = Appearance.getColorScheme();

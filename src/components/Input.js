@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Image } from 'react-native';
 import styled from 'styled-components';
+// import { Button } from 'components';
+import { Send } from 'icons';
 
 const Input = ({
 	placeholder,
@@ -13,6 +15,7 @@ const Input = ({
 	label,
 	type,
 	name,
+	onPress,
 }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
@@ -47,6 +50,10 @@ const Input = ({
 		}
 	}, [type, showPassword]);
 
+	const shouldShowButton = useMemo(() => {
+		return type === 'submit';
+	}, [type]);
+
 	return (
 		<>
 			<Wrapper isFocused={isFocused} name={name}>
@@ -65,6 +72,12 @@ const Input = ({
 				/>
 
 				{renderLock}
+
+				{shouldShowButton ? (
+					<ButtonWrapper onPress={onPress}>
+						<Text>Send</Text>
+					</ButtonWrapper>
+				) : null}
 			</Wrapper>
 		</>
 	);
@@ -108,4 +121,17 @@ const Label = styled.Text`
 const IconWrapper = styled.TouchableOpacity`
 	padding: 5px;
 	background: ${({ theme }) => theme.primaryBackground};
+`;
+
+const ButtonWrapper = styled.TouchableOpacity`
+	width: 30%;
+	align-items: center;
+	justify-content: center;
+`;
+
+const Text = styled.Text`
+	color: blue;
+	font-size: 20px;
+	text-align: center;
+	vertical-align: middle;
 `;
