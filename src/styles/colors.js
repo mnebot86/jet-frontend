@@ -14,3 +14,6 @@ export const secondaryText = white;
 
 export const primaryBackground = white;
 export const secondaryBackground = black;
+
+const newBlue = '#0D45DE';
+const dark100 = '#454545';

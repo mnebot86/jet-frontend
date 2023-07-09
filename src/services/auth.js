@@ -48,6 +48,7 @@ export const login = async (data) => {
 
 		return res.data;
 	} catch (error) {
+		console.log({ error });
 		const { response } = error;
 		if (response && response.data && response.data.error) {
 			return response.data;

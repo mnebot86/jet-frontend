@@ -1,6 +1,7 @@
 import React from 'react';
 import { Appearance } from 'react-native';
 import { ThemeProvider } from 'styled-components';
+import { NativeBaseProvider, extendTheme } from 'native-base';
 import { Provider } from 'react-redux';
 import Main from 'src/Main';
 import { Toast } from 'components';
@@ -13,6 +14,11 @@ if (__DEV__) {
 }
 
 const App = () => {
+	const config = {
+		useSystemColorMode: true,
+	};
+
+	const customTheme = extendTheme({ config });
 	const colorScheme = Appearance.getColorScheme();
 
 	const theme = colorScheme !== 'dark' ? DARK_THEME : LIGHT_THEME;
@@ -20,8 +26,10 @@ const App = () => {
 	return (
 		<Provider store={store}>
 			<ThemeProvider theme={LIGHT_THEME}>
-				<Toast />
-				<Main />
+				<NativeBaseProvider theme={customTheme}>
+					<Toast />
+					<Main />
+				</NativeBaseProvider>
 			</ThemeProvider>
 		</Provider>
 	);

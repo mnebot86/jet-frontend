@@ -1,7 +1,16 @@
 import React, { useState, useCallback } from 'react';
+import {
+	Box,
+	Center,
+	FormControl,
+	Heading,
+	VStack,
+	Input,
+	Button,
+	KeyboardAvoidingView,
+} from 'native-base';
+import { Platform } from 'react-native';
 import { useDispatch } from 'react-redux';
-import styled, { useTheme } from 'styled-components';
-import { Button, Input } from 'components';
 import { login, setAuthToken } from 'services/auth';
 import { setSignedIn } from 'store/slices/user';
 import { openToast, closeToast } from '../../store/slices/toast';
@@ -11,13 +20,11 @@ const Login = () => {
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [showPassword, setShowPassword] = useState(false);
-
-	const togglePassword = useCallback(() => {
-		setShowPassword(!showPassword);
-	}, [showPassword]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = useCallback(async () => {
+		setIsLoading(true);
+
 		const data = {
 			email,
 			password,
@@ -25,6 +32,8 @@ const Login = () => {
 
 		await login(data).then((data) => {
 			if (!!data.error) {
+				setIsLoading(false);
+
 				dispatch(
 					openToast({
 						isOpen: true,
@@ -33,7 +42,6 @@ const Login = () => {
 					})
 				);
 
-				setEmail('');
 				setPassword('');
 
 				setTimeout(() => {
@@ -42,6 +50,8 @@ const Login = () => {
 			}
 
 			if (!!data.token) {
+				setIsLoading(false);
+
 				setAuthToken(data.token);
 
 				dispatch(
@@ -61,51 +71,67 @@ const Login = () => {
 	}, [email, password]);
 
 	return (
-		<Container>
-			<InputWrapper>
-				<Input
-					label="Email"
-					name="email"
-					value={email}
-					onChangeText={setEmail}
-					autoCapitalize="none"
-				/>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+			<Center w="100%" px="4" height="100%" bg="white">
+				<Box p="2" width="100%" maxWidth="400px">
+					<Heading
+						size="lg"
+						fontWeight="600"
+						color="coolGray.800"
+						mb="2">
+						Welcome
+					</Heading>
 
-				<SecondInputWrapper>
-					<Input
-						label="Password"
-						name="password"
-						value={password}
-						onChangeText={setPassword}
-						secureTextEntry={true}
-					/>
-				</SecondInputWrapper>
-			</InputWrapper>
+					<Heading
+						color="coolGray.600"
+						fontWeight="medium"
+						size="sm"
+						mb="4">
+						Sign in to continue!
+					</Heading>
 
-			<ButtonWrapper>
-				<Button title="Submit" onPress={handleSubmit} />
-			</ButtonWrapper>
-		</Container>
+					<VStack space={3}>
+						<FormControl>
+							<FormControl.Label>Email</FormControl.Label>
+							<Input
+								focusBorderColor="#0D45DE"
+								color="#000"
+								_focus={{ bg: '#D8E2FD' }}
+								size="lg"
+								onChangeText={setEmail}
+								value={email}
+								autoCapitalize="none"
+							/>
+						</FormControl>
+
+						<FormControl>
+							<FormControl.Label>Password</FormControl.Label>
+							<Input
+								type="password"
+								focusBorderColor="#0D45DE"
+								color="#000"
+								_focus={{ bg: '#D8E2FD' }}
+								size="lg"
+								onChangeText={setPassword}
+								value={password}
+							/>
+						</FormControl>
+
+						<Button
+							size="lg"
+							onPress={handleSubmit}
+							_pressed={{ bg: '#0934AA' }}
+							bg="#0D45DE"
+							isLoading={isLoading}
+							isLoadingText="Submitting">
+							Sign in
+						</Button>
+					</VStack>
+				</Box>
+			</Center>
+		</KeyboardAvoidingView>
 	);
 };
 
 export default Login;
-
-const Container = styled.View`
-	flex: 1;
-	background: ${({ theme }) => theme.primaryBackground};
-	padding: 10px 20px;
-`;
-
-const InputWrapper = styled.View`
-	margin: 80px 0;
-	justify-content: space-between;
-`;
-
-const SecondInputWrapper = styled.View`
-	margin-top: 40px;
-`;
-
-const ButtonWrapper = styled.View`
-	align-items: center;
-`;

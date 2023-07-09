@@ -32,7 +32,7 @@ const CustomModal = ({
 	);
 };
 
-Modal.defaultProps = {
+CustomModal.defaultProps = {
 	children: null,
 	animationType: 'slide',
 	transparent: false,
